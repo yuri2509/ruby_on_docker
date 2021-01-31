@@ -1,2 +1,22 @@
 version: '3'
+services:
+  rails:
+    build:
+      context: .
+      dockerfile: ./ruby/Dockerfile
+    environment:
+      RAILS_ENV: "development"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "example_root_password"
+      MYSQL_HOST: "mysql"
+    command: "bundle exec rails server -p 3000 -b '0.0.0.0'"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./sample_rails_application:/app
+      - bundle_data:/usr/local/bundle
       
