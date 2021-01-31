@@ -15,5 +15,13 @@ RUN apt-get update && apt-get install -y curl apt-transport-https wget && \
 RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
   apt-get install -y nodejs
 
+RUN mkdir /app
+RUN cd /app
+RUN gem install bundler
+COPY ./sample_rails_application/ /app
+WORKDIR /app
+
+EXPOSE 3000
+
 # 実行したいコマンド
 CMD ["ruby", "-v"]
