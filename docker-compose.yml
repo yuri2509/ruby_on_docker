@@ -6,37 +6,32 @@ services:
       dockerfile: ./ruby/Dockerfile
     environment:
       RAILS_ENV: "development"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "example_root_password"
-      MYSQL_HOST: "mysql"
+      POSTGRESQL_USER: "postgres_master"
+      POSTGRESQL_PASSWORD: "postgres_password"
+      POSTGRESQL_HOST: "postgresql"
     command: "bundle exec rails server -p 3000 -b '0.0.0.0'"
     tty: true
     stdin_open: true
     depends_on:
-      - mysql
+      - postgresql
     ports:
       - "3000:3000"
     volumes:
       - ./sample_rails_application:/app
       - bundle_data:/usr/local/bundle
-  mysql:
+  postgresql:
     build:
-      context: ./mysql
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./postgresql/Dockerfile
     environment:
-      MYSQL_ROOT_PASSWORD: "example_root_password"
-      MYSQL_USER: "sample_user"
-      MYSQL_PASSWORD: "sample_password"
-      MYSQL_DATABASE: "sample_rails_db"
-      TZ: 'Asia/Tokyo'
-    command: --default-authentication-plugin=mysql_native_password
+      POSTGRES_PASSWORD: "postgres_password"
+      POSTGRES_USER: "postgres_master"
     volumes:
-      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - mysql_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
     ports:
-      - "33306:3306"
+      - "5432:5432"
 
 # データ永続化領域
 volumes:
   bundle_data:
-  mysql_data:
+  pg_data:
